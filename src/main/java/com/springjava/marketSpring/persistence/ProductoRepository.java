@@ -6,6 +6,7 @@ import com.springjava.marketSpring.persistence.crud.ProductoCrudRepository;
 import com.springjava.marketSpring.persistence.entity.Producto;
 import com.springjava.marketSpring.persistence.mapper.ProductMapper;
 import org.aspectj.apache.bcel.classfile.Module;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import java.util.Optional;
 
 @Repository
 public class ProductoRepository implements ProductRepository {
+    @Autowired
     private ProductoCrudRepository productoCrudRepository;
-
+    @Autowired
     private ProductMapper mapper;
+
     @Override
     public List<Product> getAll(){
         List<Producto> productos = (List<Producto>) productoCrudRepository.findAll();
@@ -43,6 +46,7 @@ public class ProductoRepository implements ProductRepository {
     public Product save(Product product) {
         Producto producto = mapper.toProducto(product);
         return mapper.toProduct(productoCrudRepository.save(producto));
+
     }
 
     @Override
