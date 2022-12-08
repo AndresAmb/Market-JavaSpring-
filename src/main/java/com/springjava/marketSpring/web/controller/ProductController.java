@@ -2,11 +2,11 @@ package com.springjava.marketSpring.web.controller;
 
 import com.springjava.marketSpring.domain.Product;
 import com.springjava.marketSpring.domain.service.ProductService;
-import com.springjava.marketSpring.persistence.crud.ProductoCrudRepository;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,23 +18,39 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping()
-    public List<Product> getAll(){
-        return productService.getAll();
+    @ApiOperation("Get all supermarket products")
+    @ApiResponse(code=200,message = "OK")
+    public ResponseEntity<List<Product>> getAll(){
+        return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
-    public Optional<Product> getProduct(int productId){
-        return productService.getProduct(productId);
+    @GetMapping("/{id}")
+    @ApiOperation("Search a product with an ID")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "Ok"),
+            @ApiResponse(code = 404,message = "Product not found")
+    })
+    public ResponseEntity<Product> getProduct(@ApiParam(value = "The id of the product", required = true, example = "7")
+                                                  @PathVariable("id") int productId){
+        return ResponseEntity.of(productService.getProduct(productId));
     }
 
-    public Optional<List<Product>> getByCategory(int categoryId){
-        return productService.getByCategory(categoryId);
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> getByCategory(@PathVariable("id") int categoryId){
+        return ResponseEntity.of(productService.getByCategory(categoryId));
     }
 
-    public Product save(Product product){
-        return productService.save(product);
+    @PostMapping()
+    public ResponseEntity<Product> save(@RequestBody Product product){
+        return new ResponseEntity<>(productService.save(product),HttpStatus.CREATED);
     }
 
-    public boolean delete(int productId){
-        return productService.delete(productId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable int id){
+        if(productService.delete(id)){
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }
