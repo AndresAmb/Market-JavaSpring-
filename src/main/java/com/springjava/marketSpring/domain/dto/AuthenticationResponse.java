@@ -1,9 +1,9 @@
 package com.springjava.marketSpring.domain.dto;
 
-public class AutenticationResponse {
+public class AuthenticationResponse {
     private String jwt;
 
-    public AutenticationResponse(String jwt) {
+    public AuthenticationResponse(String jwt) {
         this.jwt = jwt;
     }
 
