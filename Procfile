@@ -1,1 +1,1 @@
-web: java -jar -Dspring.profiles.active=pdn buil/libs/marketSpring-1.0.jar
+web: java -jar -Dspring.profiles.active=pdn marketSpring-1.0.jar
